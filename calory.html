@@ -1,0 +1,109 @@
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <title> カロリーを計算する奴</title>
+    
+    <style>
+      .diet_form {
+        background: lemonchiffon;
+        padding: 10px 30px;
+      }
+
+      form dl dt {
+        width: 200px;
+        height: 40px;
+        padding: 10px 0;
+        line-height: 40px;
+        float: left;
+        font-family: 'Hiragino Kaku Gothic Pro', 'Meiryo', sans-serif;
+      }
+
+      form dl dd{
+        padding: 10px 0;
+        margin: 0;
+      }
+
+      .box {
+        box-sizing: border-box;
+        width: 150px;
+        height: 40px;
+        margin: 0;
+        padding: 0;
+
+      }
+
+      .calc-btn{
+
+      box-sizing: border-box;
+        width: 80px;
+        height: 30px;
+        border: 1px solid #333;
+      }
+
+      .calc-btn:hover{
+        cursor: pointer;
+      }
+
+    </style>
+
+    <script type="text/javascript">
+      function calc(omosa, bfp){
+        //体重:測った体重
+        //体脂肪率:脂肪がどんぐらいあるか
+
+        //LBM:筋肉・骨などの重さ
+        //体重-（体重×体脂肪率）
+    
+        //接種可能カロリー:LBM×40
+        //P　（タンパク質）:LBM×2
+        //F(脂質):LBM×0.9
+        //C(炭水化物):(接種可能カロリー) - (P×4) - (F×9) /4
+
+        const lbm = Math.round((omosa- (omosa * (bfp/100)) )*100)/100;
+        const cal = Math.round(lbm * 40);
+        const protein = Math.round(lbm * 2);
+        const fat = Math.round(lbm * 0.9);
+        const carbo = Math.round((cal - (protein * 4) - (fat * 9)) /4)
+
+        //ブラウザでしか使えない関数
+        document.getElementById("lean").value = lbm;
+        document.getElementById("cal").value = cal;
+        document.getElementById("protein").value = protein;
+        document.getElementById("fat").value = fat;
+        document.getElementById("carbo").value = carbo;
+      }
+    </script>
+
+  </head>
+  
+  <body>
+    <form class="diet_form">
+      <dl>
+        <dt><u>体重（kg）:</u></dt>
+        <dd><input type="number" name="omosa" class="box" min="0" placeholder="体重" step="0.1"></dd>
+
+        <dt><u>体脂肪率（%）:</u></dt>
+        <dd><input type="number" name="bpf" class="box" min="0" placeholder="体脂肪率" step="0.1"></dd>
+
+        <p><input type="button" onclick="calc(omosa.value, bpf.value);" class="calc-btn" value="計算"></p>
+
+
+        <dt>LBM(除脂肪体重(kg)) :</dt>
+        <dd><input id="lean" type="number" name="weight" class="box" readonly="true"></dd>
+
+        <dt>接種カロリー(kcal) :</dt>
+        <dd><input id="cal" type="number" name="weight" class="box" readonly="true"></dd>
+
+        <dt>タンパク質(g) :</dt>
+        <dd><input id="protein" type="number" name="weight" class="box" readonly="true"></dd>
+        
+        <dt>脂質(g) :</dt>
+        <dd><input id="fat" type="number" name="weight" class="box" readonly="true"></dd>
+
+        <dt>炭水化物(g) :</dt>
+        <dd><input id="carbo" type="number" name="weight" class="box" readonly="true"></dd>
+      </dl>
+
+    </form>
+  </body>
+</html>
