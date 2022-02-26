@@ -1,242 +1,245 @@
 <!DOCTYPE html>
 <html>
-    <head>
-        <title>テトリス</title>
-    </head>
-    <body>
-        <canvas id="can"></canvas>
 
-        <script>
-            //alert("start");
+<head>
+    <title>テトリス</title>
+</head>
 
-            const BLOCK_SIZE = 30;//ブロックの辺の大きさ
-            const TETRO_SIZE = 4; //4x4のマスを作る
-            const FIELD_COL = 10; //横
-            const FIELD_ROW = 20; //縦
-            const SCREEN_WIDTH = BLOCK_SIZE * FIELD_COL;  //横スクリーンのサイズ
-            const SCREEN_HEIGHT = BLOCK_SIZE * FIELD_ROW; //縦スクリーンのサイズ
+<body>
+    <canvas id="can"></canvas>
 
-            let tetro_x = 3; //テトロの初期位置
-            let tetro_y = 0; //テトロの初期位置
+    <script>
+        //alert("start");
 
-            //キャンバスを取得
-            let can = document.getElementById("can");
-            let con = can.getContext("2d");
+        const BLOCK_SIZE = 30;//ブロックの辺の大きさ
+        const TETRO_SIZE = 4; //4x4のマスを作る
+        const FIELD_COL = 10; //横
+        const FIELD_ROW = 20; //縦
+        const SCREEN_WIDTH = BLOCK_SIZE * FIELD_COL;  //横スクリーンのサイズ
+        const SCREEN_HEIGHT = BLOCK_SIZE * FIELD_ROW; //縦スクリーンのサイズ
+
+        let tetro_x = 3; //テトロの初期位置
+        let tetro_y = 0; //テトロの初期位置
+
+        //キャンバスを取得
+        let can = document.getElementById("can");
+        let con = can.getContext("2d");
 
 
-            //キャンバスの画面サイズの設定
-            can.width = SCREEN_WIDTH;
-            can.height = SCREEN_HEIGHT;
+        //キャンバスの画面サイズの設定
+        can.width = SCREEN_WIDTH;
+        can.height = SCREEN_HEIGHT;
 
-            //ステージの枠
-            can.style.border ="4px solid#555"
-            
+        //ステージの枠
+        can.style.border = "4px solid#555"
 
-            //テトロのバリエーション
-            const tetro_type = [
-                [//1
-                    [0, 0, 0, 0],
-                    [1, 1, 1, 1],
-                    [0, 0, 0, 0],
-                    [0, 0, 0, 0],
-                ],
-                [//L
-                    [0, 1, 0, 0],
-                    [0, 1, 0, 0],
-                    [0, 1, 1, 0],
-                    [0, 0, 0, 0],
-                ],
-                [//J
-                    [0, 0, 1, 0],
-                    [0, 0, 1, 0],
-                    [0, 1, 1, 0],
-                    [0, 0, 0, 0],
-                ],
-                [//T
-                    [0, 1, 0, 0],
-                    [0, 1, 1, 0],
-                    [0, 1, 0, 0],
-                    [0, 0, 0, 0],
-                ],
-                [//O
-                    [0, 0, 0, 0],
-                    [0, 1, 1, 0],
-                    [0, 1, 1, 0],
-                    [0, 0, 0, 0],
-                ],
-                [//Z
-                    [0, 0, 0, 0],
-                    [1, 1, 0, 0],
-                    [0, 1, 1, 0],
-                    [0, 0, 0, 0],
-                ],
-                [//S
-                    [0, 0, 0, 0],
-                    [0, 1, 1, 0],
-                    [1, 1, 0, 0],
-                    [0, 0, 0, 0],
-                ],
-            ]
 
-            const tetro_color = [
-                ['cyan'],
-                ['orange'],
-                ['blue'],
-                ['blueviolet'],
-                ['yello'],
-                ['red'],
-                ['lime'],
+        //テトロのバリエーション
+        const tetro_type = [
+            [//1
+                [0, 0, 0, 0],
+                [1, 1, 1, 1],
+                [0, 0, 0, 0],
+                [0, 0, 0, 0],
+            ],
+            [//L
+                [0, 1, 0, 0],
+                [0, 1, 0, 0],
+                [0, 1, 1, 0],
+                [0, 0, 0, 0],
+            ],
+            [//J
+                [0, 0, 1, 0],
+                [0, 0, 1, 0],
+                [0, 1, 1, 0],
+                [0, 0, 0, 0],
+            ],
+            [//T
+                [0, 1, 0, 0],
+                [0, 1, 1, 0],
+                [0, 1, 0, 0],
+                [0, 0, 0, 0],
+            ],
+            [//O
+                [0, 0, 0, 0],
+                [0, 1, 1, 0],
+                [0, 1, 1, 0],
+                [0, 0, 0, 0],
+            ],
+            [//Z
+                [0, 0, 0, 0],
+                [1, 1, 0, 0],
+                [0, 1, 1, 0],
+                [0, 0, 0, 0],
+            ],
+            [//S
+                [0, 0, 0, 0],
+                [0, 1, 1, 0],
+                [1, 1, 0, 0],
+                [0, 0, 0, 0],
+            ],
+        ]
 
-            ]
-        
-            let tetro_no = Math.floor(Math.random()*7);
-            let tetro = tetro_type[tetro_no];
-            let color = tetro_color[tetro_no];
-           
+        const tetro_color = [
+            ['cyan'],
+            ['orange'],
+            ['blue'],
+            ['blueviolet'],
+            ['yello'],
+            ['red'],
+            ['lime'],
 
-            //
-            let field = [];
-            for(let y=0; y<FIELD_ROW; y++){
-                field[y] = [];
-                for(let x=0; x<FIELD_COL; x++){
-                    field[y][x] = 0;
-                }
+        ]
+
+        let tetro_no = Math.floor(Math.random() * 7);
+        let tetro = tetro_type[tetro_no];
+        let color = tetro_color[tetro_no];
+
+
+        //
+        let field = [];
+        for (let y = 0; y < FIELD_ROW; y++) {
+            field[y] = [];
+            for (let x = 0; x < FIELD_COL; x++) {
+                field[y][x] = 0;
             }
+        }
 
-            //１FPSになる(1000で一秒)
-            setInterval(update, 1000);
+        //１FPSになる(1000で一秒)
+        setInterval(update, 1000);
 
-            console.log('hello');
+        console.log('hello');
 
-            //イベント駆動によりキーが押されたら呼ばれる処理をブラウザに設定
-            document.onkeydown = function(event){
-                console.log(event);
-                switch(event.key){
-                    case 'd': //d
-                        if(canMove(1, 0))tetro_x++;
-                        break;
-                    case 'a': //a
-                        if(canMove(-1, 0))tetro_x--;
-                        break;
-                    case 's': //s
-                        if(canMove(0, 1))tetro_y++;
-                        break;
-                    case 'f': //f,時計回りに回転
-
-                        //回転する
-                        t_tetro = rotate();
-                        //回転した場所にブロックが無かったら回転する
-                        if(canMove(0,0,t_tetro)) tetro = t_tetro;
+        //イベント駆動によりキーが押されたら呼ばれる処理をブラウザに設定
+        document.onkeydown = function (event) {
+            console.log(event);
+            switch (event.key) {
+                case 'd': //d
+                    if (canMove(1, 0)) tetro_x++;
                     break;
-                }
-                drawStage();
+                case 'a': //a
+                    if (canMove(-1, 0)) tetro_x--;
+                    break;
+                case 's': //s
+                    if (canMove(0, 1)) tetro_y++;
+                    break;
+                case 'f': //f,時計回りに回転
+
+                    //回転する
+                    t_tetro = rotate();
+                    //回転した場所にブロックが無かったら回転する
+                    if (canMove(0, 0, t_tetro)) tetro = t_tetro;
+                    break;
             }
+            drawStage();
+        }
 
-            let counter =0;
+        let counter = 0;
 
-            //自動で落下する
-            function update(){
-                if( canMove(0,1) ){
-                    tetro_y ++;
+        //自動で落下する
+        function update() {
+            if (canMove(0, 1)) {
+                tetro_y++;
 
-                }else{ //着地
-                    copyTetro();
-                    //場所初期化
-                    tetro_x = 3;
-                    tetro_y = 0;
+            } else { //着地
+                copyTetro();
+                //場所初期化
+                tetro_x = 3;
+                tetro_y = 0;
 
-                    //テトロの新種を作る
-                    tetro_no = Math.floor(Math.random()*7);
-                    tetro = tetro_type[tetro_no];
-                    color = tetro_color[tetro_no];
-                }
-                drawStage();
+                //テトロの新種を作る
+                tetro_no = Math.floor(Math.random() * 7);
+                tetro = tetro_type[tetro_no];
+                color = tetro_color[tetro_no];
             }
+            drawStage();
+        }
 
-            //ステージに落下地点の自分のコピーをつくる
-            function copyTetro(){
-                for(let y=0; y<TETRO_SIZE; y++){
-                    for(let x=0; x<TETRO_SIZE; x++){
-                        if(tetro[y][x] == 1){
-                            field[tetro_y + y][tetro_x + x] = 1;
-                        }
+        //ステージに落下地点の自分のコピーをつくる
+        function copyTetro() {
+            for (let y = 0; y < TETRO_SIZE; y++) {
+                for (let x = 0; x < TETRO_SIZE; x++) {
+                    if (tetro[y][x] == 1) {
+                        field[tetro_y + y][tetro_x + x] = 1;
+                    }
+                }
+            }
+        }
+
+
+        //var randomColor = "#" + Math.floor(Math.random() * 16777215).toString(16);
+
+
+        //指定された場所に１個ブロックを書く
+        function drawBlock(x, y) {
+
+            let px = x * BLOCK_SIZE;
+            let py = y * BLOCK_SIZE;
+
+            con.fillStyle = color;
+            con.fillRect(px, py, BLOCK_SIZE, BLOCK_SIZE);
+            con.strokeStyle = "black";
+            con.strokeRect(px, py, BLOCK_SIZE, BLOCK_SIZE);
+        }
+
+        function drawStage() {
+            //フィールド描画
+            con.clearRect(0, 0, SCREEN_HEIGHT, SCREEN_HEIGHT);
+
+            for (let y = 0; y < FIELD_ROW; y++) {
+                for (let x = 0; x < FIELD_COL; x++) {
+                    if (field[y][x] == 1) {
+                        drawBlock(x, y);
                     }
                 }
             }
 
-
-            //var randomColor = "#" + Math.floor(Math.random() * 16777215).toString(16);
-
-            
-            //指定された場所に１個ブロックを書く
-            function drawBlock(x, y) {
-                
-                let px = x*BLOCK_SIZE;
-                let py = y*BLOCK_SIZE;
-
-                con.fillStyle = color;
-                con.fillRect(px,py, BLOCK_SIZE, BLOCK_SIZE);
-                con.strokeStyle ="black";
-                con.strokeRect(px,py, BLOCK_SIZE, BLOCK_SIZE);
-            }
-
-            function drawStage() {
-                //フィールド描画
-                con.clearRect(0,0,SCREEN_HEIGHT,SCREEN_HEIGHT);
-
-                for(let y=0; y<FIELD_ROW; y++){
-                    for(let x=0; x<FIELD_COL; x++){
-                        if(field[y][x] == 1){
-                            drawBlock(x,y);
-                        }
+            //テトロ描画
+            for (let y = 0; y < TETRO_SIZE; y++) {
+                for (let x = 0; x < TETRO_SIZE; x++) {
+                    if (tetro[y][x] == 1) {
+                        drawBlock(tetro_x + x, tetro_y + y);
                     }
                 }
-                
-                //テトロ描画
-                for(let y=0; y<TETRO_SIZE; y++){
-                    for(let x=0; x<TETRO_SIZE; x++){
-                        if(tetro[y][x] == 1){
-                            drawBlock(tetro_x+x, tetro_y+y);
-                        }
+            }
+        }
+
+        //指定した場所にブロックがあるか検知する
+        function canMove(mx, my, t_tetro) {
+            //return true;
+            if (t_tetro == undefined) t_tetro = tetro;
+
+            for (let y = 0; y < TETRO_SIZE; y++) {
+                for (let x = 0; x < TETRO_SIZE; x++) {
+                    if (t_tetro[y][x]) {
+                        let px = tetro_x + mx + x;
+                        let py = tetro_y + my + y;
+
+                        if (px < 0 || py < 0 || px >= FIELD_COL || py >= FIELD_ROW) return false;
+
+                        //t_tetroの座標にブロックがあったらfalse=移動できへんで
+                        if (field[py][px]) return false;
                     }
                 }
             }
 
-            //指定した場所にブロックがあるか検知する
-            function canMove(mx,my,t_tetro){
-                //return true;
-                if(t_tetro == undefined) t_tetro = tetro;
+            return true;
+        }
 
-                for(let y=0; y<TETRO_SIZE; y++){
-                    for(let x=0; x<TETRO_SIZE; x++){
-                        if(t_tetro[y][x]){
-                            let px = tetro_x + mx + x;
-                            let py = tetro_y + my + y;
-
-                            if(px<0 || py<0 || px>=FIELD_COL || py>=FIELD_ROW) return false;
-
-                            //t_tetroの座標にブロックがあったらfalse=移動できへんで
-                            if(field[py][px]) return false;
-                        }
-                    }
+        //現在のてとろを開店した新しい値にする
+        function rotate() {
+            let nTetro = []
+            for (let y = 0; y < TETRO_SIZE; y++) {
+                nTetro[y] = []
+                for (let x = 0; x < TETRO_SIZE; x++) {
+                    nTetro[y][x] = tetro[TETRO_SIZE - x - 1][y];
                 }
-                
-                return true;
             }
+            return nTetro;
+        }
 
-            //現在のてとろを開店した新しい値にする
-            function rotate(){
-                let nTetro = []
-                for(let y=0; y<TETRO_SIZE; y++){
-                    nTetro[y] = []
-                    for(let x=0; x<TETRO_SIZE; x++){
-                        nTetro[y][x] = tetro[TETRO_SIZE-x-1][y];
-                    }
-                }
-                return nTetro;
-            }
-            
-        </script>
-        テトリスだよ-ー
-    </body>
+    </script>
+    テトリスだよ-ー
+</body>
+
 </html>
