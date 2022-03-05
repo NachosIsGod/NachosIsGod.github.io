@@ -20,6 +20,8 @@
 
         let tetro_x = 3; //テトロの初期位置
         let tetro_y = 0; //テトロの初期位置
+        let playing = true;
+        let fps = 1;
 
         //キャンバスを取得
         let can = document.getElementById("can");
@@ -103,37 +105,38 @@
         }
 
         //１FPSになる(1000で一秒)
-        setInterval(update, 1000);
+        setInterval(update, 1000 / fps);
 
         console.log('hello');
 
         //イベント駆動によりキーが押されたら呼ばれる処理をブラウザに設定
         document.onkeydown = function (event) {
-            console.log(event);
-            switch (event.key) {
-                case 'd': //d
-                    if (canMove(1, 0)) tetro_x++;
-                    break;
-                case 'a': //a
-                    if (canMove(-1, 0)) tetro_x--;
-                    break;
-                case 's': //s
-                    if (canMove(0, 1)) tetro_y++;
-                    break;
-                case 'g': //f,時計回りに回転
-                    //回転する
-                    t_tetro = rotate('right');
-                    //回転した場所にブロックが無かったら回転する
-                    if (canMove(0, 0, t_tetro)) tetro = t_tetro;
-                    break;
+            if(playing){
+                console.log(event);
+                switch (event.key) {
+                    case 'd': //d
+                        if (canMove(1, 0)) tetro_x++;
+                        break;
+                    case 'a': //a
+                        if (canMove(-1, 0)) tetro_x--;
+                        break;
+                    case 's': //s
+                        if (canMove(0, 1)) tetro_y++;
+                        break;
+                    case 'g': //f,時計回りに回転
+                        //回転する
+                        t_tetro = rotate('right');
+                        //回転した場所にブロックが無かったら回転する
+                        if (canMove(0, 0, t_tetro)) tetro = t_tetro;
+                        break;
 
-                case 'f':
-                    //回転する
-                    t_tetro = rotate('left');
-                    //回転した場所にブロックが無かったら回転する
-                    if (canMove(0, 0, t_tetro)) tetro = t_tetro;
-                    break;
-                    
+                    case 'f':
+                        //回転する
+                        t_tetro = rotate('left');
+                        //回転した場所にブロックが無かったら回転する
+                        if (canMove(0, 0, t_tetro)) tetro = t_tetro;
+                        break;
+                }
             }
             drawStage();
         }
@@ -145,12 +148,10 @@
             } else { //着地
 
                 if(tetro_y == 0){
-                    //リセット
-                    for (let y = 0; y < FIELD_ROW; y++) {
-                        for (let x = 0; x < FIELD_COL; x++) {
-                            field[y][x] = -1;
-                        }
-                    }
+                    //finish
+                    playing = false;
+                    fps = 60;
+                    document.write('gameover');
                 }else{
                     copyTetro();
                 }
