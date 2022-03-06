@@ -156,6 +156,9 @@
                     copyTetro();
                 }
 
+                //横一列そろってるか
+                deleteTetro(tetro_y);
+
                 //場所初期化
                 tetro_x = 3;
                 tetro_y = 0;
@@ -166,6 +169,26 @@
                 color = tetro_colors[tetro_no];
             }
             drawStage();
+        }
+
+        //横一列になったら消す
+        function deleteTetro(y){
+            let isDelete = true;
+            for(let j = 0; j < TETRO_SIZE; j++){
+                isDelete = true;
+                for(let i = 0; i < FIELD_COL; i++){
+                    if(field[y+j-1][i] == -1){
+                        isDelete = false;
+                    }
+                }
+                if(isDelete){
+                    for(let i = 0; i < FIELD_COL; i++){
+                        field[y+j-1][i] = -1;
+                    }
+                    //消した上の段のブロックを下に下げる
+                    let nStage = stage;
+                }
+            }
         }
 
         //ステージに落下地点の自分のコピーをつくる
