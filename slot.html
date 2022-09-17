@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>スロット</title>
+    <link rel="icon" href="favicon.ico">
+    <style>
+
+        @font-face {
+            font-family: 'MyFont';
+            src: url(fonts/keifont.ttf);
+        }
+
+        .title{
+            background-color: rgba(255, 255, 255, 0.406);
+        }
+
+        .stop_btn{
+            border-radius: 5px;
+            font-family: 'Myfont';
+            margin-left: 100px;
+            margin-right: 100px;
+            visibility: hidden;
+            font-size: 30px;
+            box-sizing: border-box;
+            width: 270px;
+            height: 90px;
+            border: 1px solid #333;
+
+        }
+
+        .slot_btn{
+            border-radius: 30px;
+            font-family: 'Myfont';
+            font-size: 48px;
+            box-sizing: border-box;
+            width: 360px;
+            height: 120px;
+            border: 2px solid #333;
+        }
+    </style>
+
+    
+    
+</head>
+<body background="images/gray.jpg">
+    <div style="text-align: center;">
+        <h1 class="title">スロット</h1>
+        <script type="text/javascript">
+
+            var imglist = new Array(
+                "images/slot/kurotyan.png",
+                "images/slot/seven.png",
+                "images/slot/heyy.png",
+                "images/slot/poop.png",
+                "images/slot/carpas.png" );
+
+            var count = 0;
+            function slot(){
+                for(var i=0; i<3; i++){document.getElementById(i).src = "images/slot/_slotgif.gif";}
+                for(var i=3; i<6; i++){document.getElementById(i).style.visibility = "visible";}
+                document.getElementById("mawasu").style.visibility = "hidden";
+            }
+
+            function roll(num){
+                var selectnum = Math.floor(Math.random() * imglist.length);
+                document.getElementById(num).src = imglist[selectnum];
+                document.getElementById(num+3).style.visibility = "hidden";
+                count++;
+                if(count > 2){
+                    document.getElementById("mawasu").value = "もう一回";
+                    document.getElementById("mawasu").style.visibility = "visible";
+                    count = 0;
+                }
+                if(document.getElementById('0').src == document.getElementById('1').src){
+                    if(document.getElementById('0').src == document.getElementById('2').src){
+                        document.getElementById("finish").innerText = "おめでとう！";
+                    }
+                }
+            }
+
+        </script>
+
+        <img id="0" width="480">
+        <img id="1" width="480">
+        <img id="2" width="480">
+        <p></p>
+        <input id="3" type="button" onclick="roll(0);" class="stop_btn" value="ストップ" >
+        <input id="4" type="button" onclick="roll(1);" class="stop_btn" value="ストップ" >
+        <input id="5" type="button" onclick="roll(2);" class="stop_btn" value="ストップ" >
+
+        
+        <p><input id="mawasu" type="button" onclick="slot();" class="slot_btn" value="回す" ></p>
+
+        <div id="finish">同じ画像が3つそろえばあたり</div>
+        2022 NachosIsGod
+        
+    </div>
+
+    <dl>
+        
+    </dl>
+        
+        
+    
+    
+    
+    
+    
+</body>
+</html>
