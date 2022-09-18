@@ -17,13 +17,13 @@
         .stop_btn{
             border-radius: 5px;
             font-family: 'Myfont';
-            margin-left: 100px;
-            margin-right: 100px;
+            margin-left: 7%;
+            margin-right: 7%;
             visibility: hidden;
             font-size: 30px;
             box-sizing: border-box;
-            width: 270px;
-            height: 90px;
+            width: 14.2%;
+            padding: 16px;
             border: 1px solid #333;
         }
 
@@ -32,9 +32,17 @@
             font-family: 'Myfont';
             font-size: 48px;
             box-sizing: border-box;
-            width: 360px;
-            height: 120px;
+            width: 25%;
+            padding: 32px;
             border: 2px solid #333;
+        }
+
+        @media screen and (max-width:450px){
+            
+        }
+
+        .slot_img{
+            width:28%;
         }
     </style>
 </head>
@@ -67,9 +75,9 @@
             }
         </script>
 
-        <img id="0" width="480">
-        <img id="1" width="480">
-        <img id="2" width="480">
+        <img id="0" class="slot_img">
+        <img id="1" class="slot_img">
+        <img id="2" class="slot_img">
         <p></p>
         <input id="3" type="button" onclick="roll(0);" class="stop_btn" value="ストップ" >
         <input id="4" type="button" onclick="roll(1);" class="stop_btn" value="ストップ" >
